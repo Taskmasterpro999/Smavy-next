@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Global hover highlight layer. Remove this block to revert the hover treatment. */
+@media (hover: hover) and (pointer: fine) {
+  :where(
+    a[href],
+    button,
+    summary,
+    article,
+    details,
+    div[class*="rounded"][class*="shadow"],
+    form[class*="rounded"][class*="shadow"]
+  ) {
+    transition-duration: 180ms;
+    transition-property: transform, box-shadow, border-color, background-color, color, filter;
+    transition-timing-function: ease;
+  }
+
+  :where(a[href], button, summary) {
+    cursor: pointer;
+  }
+
+  :where(a[href], button, summary):hover {
+    filter: brightness(1.06);
+  }
+
+  :where(
+    a[href][class*="rounded"],
+    button[class*="rounded"],
+    summary,
+    article,
+    details,
+    div[class*="rounded"][class*="shadow"],
+    form[class*="rounded"][class*="shadow"]
+  ):hover {
+    border-color: #f98925;
+    box-shadow:
+      0 14px 30px rgba(16, 40, 119, 0.14),
+      0 0 0 3px rgba(249, 137, 37, 0.16);
+    transform: translateY(-2px);
+  }
+}
+
+:where(a[href], button, summary):focus-visible {
+  outline: 3px solid rgba(249, 137, 37, 0.65);
+  outline-offset: 3px;
+}

@@ -8,6 +8,7 @@ type MenuName = "why" | "courses" | "resources" | "part" | null;
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState<MenuName>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
   const toggleMenu = (menu: MenuName) => {
@@ -15,17 +16,19 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (!openMenu) return;
+    if (!openMenu && !mobileOpen) return;
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpenMenu(null);
+        setMobileOpen(false);
       }
     };
 
     const closeOnOutsideClick = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
         setOpenMenu(null);
+        setMobileOpen(false);
       }
     };
 
@@ -36,14 +39,19 @@ export default function Navbar() {
       document.removeEventListener("keydown", closeOnEscape);
       document.removeEventListener("mousedown", closeOnOutsideClick);
     };
-  }, [openMenu]);
+  }, [openMenu, mobileOpen]);
+
+  const closeMobileMenu = () => {
+    setMobileOpen(false);
+    setOpenMenu(null);
+  };
 
   return (
     <header ref={navRef} className="sticky top-0 z-50 w-full bg-white text-white">
       <div className="mx-auto max-w-[1440px] border-x border-[#d8d8d8] bg-[#102877]">
-        <nav className="relative flex h-[58px] items-center justify-between px-[78px]">
+        <nav className="relative flex h-[58px] items-center justify-between px-4 sm:px-6 lg:px-[78px]">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
             <Image
               src="/assets/images/smavy-logo.png"
               alt="Smavy Academy"
@@ -166,10 +174,21 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Button */}
-          <button className="rounded-lg bg-white/10 px-3 py-2 text-[20px] lg:hidden">
-            ☰
+          <button
+            type="button"
+            aria-controls="mobile-navigation"
+            aria-expanded={mobileOpen}
+            aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+            onClick={() => {
+              setMobileOpen((isOpen) => !isOpen);
+              setOpenMenu(null);
+            }}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white lg:hidden"
+          >
+            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
         </nav>
+        {mobileOpen && <MobileNavPanel onClose={closeMobileMenu} />}
         {/* Bottom multi-color line */}
         <div className="grid h-[4px] grid-cols-4">
           <div className="bg-[#F98925]" />
@@ -179,6 +198,127 @@ export default function Navbar() {
         </div>
       </div>
     </header>
+  );
+}
+
+const mobileCourseGroups = [
+  {
+    title: "Australia",
+    links: [
+      ["English", "/courses/australia/english"],
+      ["Maths", "/courses/australia/maths"],
+      ["Science", "/courses/australia/science"],
+      ["General Ability", "/courses/australia/general-ability"],
+      ["Exam Preparation", "/courses/australia/exam-preparation"],
+    ],
+  },
+  {
+    title: "United Kingdom",
+    links: [
+      ["English", "/courses/united-kingdom/english"],
+      ["Maths", "/courses/united-kingdom/maths"],
+      ["Science", "/courses/united-kingdom/science"],
+      ["General Ability", "/courses/united-kingdom/general-ability"],
+      ["Exam Preparation", "/courses/united-kingdom/exam-preparation"],
+    ],
+  },
+  {
+    title: "United States",
+    links: [
+      ["English", "/courses/united-states/english"],
+      ["Maths", "/courses/united-states/maths"],
+      ["Science", "/courses/united-states/science"],
+      ["General Ability", "/courses/united-states/general-ability"],
+      ["Exam Preparation", "/courses/united-states/exam-preparation"],
+    ],
+  },
+  {
+    title: "IB Curriculum",
+    links: [
+      ["English", "/courses/ib-curriculum/english"],
+      ["Maths", "/courses/ib-curriculum/maths"],
+      ["Science", "/courses/ib-curriculum/science"],
+    ],
+  },
+];
+
+function MobileNavPanel({ onClose }: { onClose: () => void }) {
+  return (
+    <div id="mobile-navigation" className="border-t border-white/12 bg-[#102877] px-4 pb-6 pt-4 text-white shadow-[0_18px_45px_rgba(0,0,0,0.22)] lg:hidden">
+      <div className="grid gap-4">
+        <Link href="/why-smavy" onClick={onClose} className="rounded-[14px] bg-white/10 px-4 py-3 text-[14px] font-bold">
+          Why Smavy
+        </Link>
+        <Link href="/pricing" onClick={onClose} className="rounded-[14px] bg-white/10 px-4 py-3 text-[14px] font-bold">
+          Pricing
+        </Link>
+        <Link href="/courses/coding-robotics-ai" onClick={onClose} className="rounded-[14px] bg-white/10 px-4 py-3 text-[14px] font-bold">
+          Coding, Robotics & AI
+        </Link>
+      </div>
+
+      <div className="mt-5 space-y-3">
+        {mobileCourseGroups.map((group) => (
+          <MobileCourseSection key={group.title} title={group.title} links={group.links} onClose={onClose} />
+        ))}
+      </div>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <a href="#login" onClick={onClose} className="inline-flex min-h-12 items-center justify-center rounded-[16px] border border-white/20 px-4 text-center text-[13px] font-bold text-white">
+          Login to Smavy Platform
+        </a>
+        <a href="#trial" onClick={onClose} className="inline-flex min-h-12 items-center justify-center rounded-[16px] bg-[#F98925] px-4 text-center text-[13px] font-bold text-white">
+          Book Free Trial
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function MobileCourseSection({
+  title,
+  links,
+  onClose,
+}: {
+  title: string;
+  links: string[][];
+  onClose: () => void;
+}) {
+  return (
+    <details className="rounded-[14px] bg-white/10 px-4 py-3">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[14px] font-bold">
+        {title}
+        <span className="text-[12px] text-[#F98925]">v</span>
+      </summary>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {links.map(([label, href]) => (
+          <Link
+            key={`${title}-${label}`}
+            href={href}
+            onClick={onClose}
+            className="rounded-[10px] bg-white/10 px-3 py-2 text-[12px] font-semibold text-white/82"
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" strokeLinecap="round" strokeWidth="2.2" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m7 7 10 10M17 7 7 17" stroke="currentColor" strokeLinecap="round" strokeWidth="2.2" />
+    </svg>
   );
 }
 

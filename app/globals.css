@@ -42,6 +42,18 @@ canvas {
   max-width: 100%;
 }
 
+#mobile-nav-toggle:not(:checked) ~ .mobile-nav-panel {
+  display: none;
+}
+
+#mobile-nav-toggle:checked ~ nav label[for="mobile-nav-toggle"] .mobile-menu-icon {
+  display: none;
+}
+
+#mobile-nav-toggle:checked ~ nav label[for="mobile-nav-toggle"] .mobile-close-icon {
+  display: inline;
+}
+
 @media (max-width: 767px) {
   main > div {
     border-left-width: 0 !important;

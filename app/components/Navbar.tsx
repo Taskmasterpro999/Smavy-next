@@ -8,7 +8,6 @@ type MenuName = "why" | "courses" | "resources" | "part" | null;
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState<MenuName>(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
   const toggleMenu = (menu: MenuName) => {
@@ -16,19 +15,17 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (!openMenu && !mobileOpen) return;
+    if (!openMenu) return;
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpenMenu(null);
-        setMobileOpen(false);
       }
     };
 
     const closeOnOutsideClick = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
         setOpenMenu(null);
-        setMobileOpen(false);
       }
     };
 
@@ -39,16 +36,20 @@ export default function Navbar() {
       document.removeEventListener("keydown", closeOnEscape);
       document.removeEventListener("mousedown", closeOnOutsideClick);
     };
-  }, [openMenu, mobileOpen]);
+  }, [openMenu]);
 
   const closeMobileMenu = () => {
-    setMobileOpen(false);
     setOpenMenu(null);
+    const mobileToggle = document.getElementById("mobile-nav-toggle") as HTMLInputElement | null;
+    if (mobileToggle) {
+      mobileToggle.checked = false;
+    }
   };
 
   return (
     <header ref={navRef} className="sticky top-0 z-50 w-full bg-white text-white">
       <div className="mx-auto max-w-[1440px] border-x border-[#d8d8d8] bg-[#102877]">
+        <input id="mobile-nav-toggle" type="checkbox" className="peer sr-only" aria-label="Toggle mobile navigation" />
         <nav className="relative flex h-[58px] items-center justify-between px-4 sm:px-6 lg:px-[78px]">
           {/* Logo */}
           <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
@@ -174,21 +175,20 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Button */}
-          <button
-            type="button"
-            aria-controls="mobile-navigation"
-            aria-expanded={mobileOpen}
-            aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
-            onClick={() => {
-              setMobileOpen((isOpen) => !isOpen);
-              setOpenMenu(null);
-            }}
+          <label
+            htmlFor="mobile-nav-toggle"
+            aria-label="Open navigation menu"
             className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white lg:hidden"
           >
-            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
+            <span className="mobile-menu-icon">
+              <MenuIcon />
+            </span>
+            <span className="mobile-close-icon hidden">
+              <CloseIcon />
+            </span>
+          </label>
         </nav>
-        {mobileOpen && <MobileNavPanel onClose={closeMobileMenu} />}
+        <MobileNavPanel onClose={closeMobileMenu} />
         {/* Bottom multi-color line */}
         <div className="grid h-[4px] grid-cols-4">
           <div className="bg-[#F98925]" />
@@ -244,7 +244,7 @@ const mobileCourseGroups = [
 
 function MobileNavPanel({ onClose }: { onClose: () => void }) {
   return (
-    <div id="mobile-navigation" className="border-t border-white/12 bg-[#102877] px-4 pb-6 pt-4 text-white shadow-[0_18px_45px_rgba(0,0,0,0.22)] lg:hidden">
+    <div id="mobile-navigation" className="mobile-nav-panel border-t border-white/12 bg-[#102877] px-4 pb-6 pt-4 text-white shadow-[0_18px_45px_rgba(0,0,0,0.22)] lg:hidden">
       <div className="grid gap-4">
         <Link href="/why-smavy" onClick={onClose} className="rounded-[14px] bg-white/10 px-4 py-3 text-[14px] font-bold">
           Why Smavy

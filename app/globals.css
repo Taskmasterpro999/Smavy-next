@@ -54,6 +54,22 @@ canvas {
   display: inline;
 }
 
+:where(
+  a[href],
+  button,
+  summary,
+  label[for],
+  article,
+  details,
+  div[class*="rounded"][class*="shadow"],
+  form[class*="rounded"][class*="shadow"]
+) {
+  -webkit-tap-highlight-color: rgba(249, 137, 37, 0.18);
+  transition-duration: 180ms;
+  transition-property: transform, box-shadow, border-color, background-color, color, filter;
+  transition-timing-function: ease;
+}
+
 @media (max-width: 767px) {
   main > div {
     border-left-width: 0 !important;
@@ -167,25 +183,11 @@ canvas {
 
 /* Global hover highlight layer. Remove this block to revert the hover treatment. */
 @media (hover: hover) and (pointer: fine) {
-  :where(
-    a[href],
-    button,
-    summary,
-    article,
-    details,
-    div[class*="rounded"][class*="shadow"],
-    form[class*="rounded"][class*="shadow"]
-  ) {
-    transition-duration: 180ms;
-    transition-property: transform, box-shadow, border-color, background-color, color, filter;
-    transition-timing-function: ease;
-  }
-
-  :where(a[href], button, summary) {
+  :where(a[href], button, summary, label[for]) {
     cursor: pointer;
   }
 
-  :where(a[href], button, summary):hover {
+  :where(a[href], button, summary, label[for]):hover {
     filter: brightness(1.06);
   }
 
@@ -206,7 +208,44 @@ canvas {
   }
 }
 
-:where(a[href], button, summary):focus-visible {
+@media (hover: none), (pointer: coarse) {
+  :where(a[href], button, summary, label[for]) {
+    touch-action: manipulation;
+  }
+
+  :where(a[href], button, summary, label[for]):active {
+    filter: brightness(1.08);
+    transform: translateY(-1px) scale(0.985);
+  }
+
+  :where(
+    a[href][class*="rounded"],
+    button[class*="rounded"],
+    summary,
+    label[for][class*="rounded"],
+    article,
+    details,
+    div[class*="rounded"][class*="shadow"],
+    form[class*="rounded"][class*="shadow"]
+  ):active,
+  :where(
+    a[href][class*="rounded"],
+    button[class*="rounded"],
+    summary,
+    label[for][class*="rounded"],
+    article,
+    details,
+    div[class*="rounded"][class*="shadow"],
+    form[class*="rounded"][class*="shadow"]
+  ):focus-within {
+    border-color: #f98925;
+    box-shadow:
+      0 12px 24px rgba(16, 40, 119, 0.14),
+      0 0 0 3px rgba(249, 137, 37, 0.16);
+  }
+}
+
+:where(a[href], button, summary, label[for]):focus-visible {
   outline: 3px solid rgba(249, 137, 37, 0.65);
   outline-offset: 3px;
 }

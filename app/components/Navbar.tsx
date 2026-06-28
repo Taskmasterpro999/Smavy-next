@@ -288,7 +288,7 @@ function MobileCourseSection({
     <details className="rounded-[14px] bg-white/10 px-4 py-3">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[14px] font-bold">
         {title}
-        <span className="text-[12px] text-[#F98925]">v</span>
+        <span className="smavy-chevron text-[#F98925]">v</span>
       </summary>
       <div className="mt-3 grid grid-cols-2 gap-2">
         {links.map(([label, href]) => (
@@ -326,7 +326,7 @@ function CloseIcon() {
 function SmallArrow({ active }: { active: boolean }) {
   return (
     <span
-      className={`mt-[1px] text-[9px] leading-none transition ${
+      className={`smavy-chevron mt-[1px] leading-none transition ${
         active ? "rotate-180 text-[#F98925]" : "text-white"
       }`}
     >
@@ -419,7 +419,6 @@ function BePartDropdown() {
 /* ---------------- Small Dropdown Item ---------------- */
 
 function SmallMenuItem({
-  icon,
   iconColor,
   title,
   subtitle,
@@ -436,10 +435,10 @@ function SmallMenuItem({
   return (
     <Link href={href} onClick={onSelect} className="mb-[15px] flex items-start gap-[13px] last:mb-0">
       <span
-        className="mt-[1px] flex h-[16px] w-[16px] items-center justify-center text-[13px] leading-none"
-        style={{ color: iconColor }}
+        className="mt-[1px] flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[7px] text-[9px] font-black leading-none text-white shadow-[0_6px_14px_rgba(16,40,119,0.12)]"
+        style={{ backgroundColor: iconColor }}
       >
-        {icon}
+        {title.charAt(0)}
       </span>
 
       <span>
@@ -575,10 +574,19 @@ function CourseColumn({
   link: string;
   onClose: () => void;
 }) {
+  const heading = getCourseHeading(title);
+
   return (
     <div>
-      <h3 className="mb-[14px] border-b border-[#e8e8ef] pb-[12px] text-[12px] font-bold leading-none tracking-[-0.01em] text-[#102877]">
-        {title}
+      <h3 className="mb-[14px] flex items-center gap-2 border-b border-[#e8e8ef] pb-[12px] text-[12px] font-bold leading-none tracking-[-0.01em] text-[#102877]">
+        {heading.flag ? (
+          <Image src={heading.flag} alt="" width={18} height={18} className="h-[18px] w-[18px] rounded-full object-cover" />
+        ) : (
+          <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#102877] text-[8px] font-black text-white">
+            {heading.badge}
+          </span>
+        )}
+        {heading.label}
       </h3>
 
       <div className="space-y-[8px]">
@@ -644,4 +652,20 @@ function CourseColumn({
       </a>
     </div>
   );
+}
+
+function getCourseHeading(title: string) {
+  if (title.includes("Australia")) {
+    return { label: "Australia", flag: "/assets/images/flags/flag-australia.svg", badge: "" };
+  }
+  if (title.includes("United Kingdom")) {
+    return { label: "United Kingdom", flag: "/assets/images/flags/flag-uk.svg", badge: "" };
+  }
+  if (title.includes("United States")) {
+    return { label: "United States", flag: "/assets/images/flags/flag-us.svg", badge: "" };
+  }
+  if (title.includes("IB Curriculum")) {
+    return { label: "IB Curriculum", flag: "/assets/images/flags/flag-ib.svg", badge: "" };
+  }
+  return { label: "Coding & AI", flag: "", badge: "AI" };
 }

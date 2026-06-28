@@ -154,7 +154,14 @@ function HeroSection() {
     <section className="bg-[#102877] text-white">
       <div className="mx-auto grid min-h-[520px] max-w-[1440px] items-center gap-12 px-6 py-16 md:px-14 lg:grid-cols-[1.25fr_0.75fr] lg:px-[96px]">
         <div className="max-w-[760px]">
-          <span className="inline-flex rounded-full border border-[#46c7db]/40 bg-[#0a235f] px-5 py-2 text-[12px] font-bold text-[#4dd9eb]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#46c7db]/40 bg-[#0a235f] px-5 py-2 text-[12px] font-bold text-[#4dd9eb]">
+            <Image
+              src="/assets/images/flags/flag-australia.svg"
+              alt=""
+              width={18}
+              height={18}
+              className="h-[18px] w-[18px] rounded-full object-cover"
+            />
             Our Purpose - Our Vision - Our Values
           </span>
           <h1 className="mt-7 max-w-[730px] text-[42px] font-bold leading-[1.04] tracking-[0] md:text-[64px]">

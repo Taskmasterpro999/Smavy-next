@@ -101,6 +101,62 @@ main > div {
   width: 0.45rem;
 }
 
+.smavy-logo-shine {
+  border-radius: 10px;
+  isolation: isolate;
+  overflow: visible;
+  position: relative;
+}
+
+.smavy-logo-shine img {
+  position: relative;
+  z-index: 1;
+}
+
+.smavy-logo-shine::after {
+  animation: smavy-logo-glint 5.5s ease-in-out infinite;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 43%,
+    rgba(255, 255, 255, 0.95) 49%,
+    rgba(255, 255, 255, 0.2) 53%,
+    transparent 62%
+  );
+  content: "";
+  filter: blur(0.1px);
+  inset: -22% -22%;
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-78%) skewX(-18deg);
+  z-index: 2;
+}
+
+@keyframes smavy-logo-glint {
+  0%,
+  62% {
+    opacity: 0;
+    transform: translateX(-78%) skewX(-18deg);
+  }
+
+  68% {
+    opacity: 0.88;
+    transform: translateX(-78%) skewX(-18deg);
+  }
+
+  84% {
+    opacity: 0.88;
+    transform: translateX(78%) skewX(-18deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(78%) skewX(-18deg);
+  }
+}
+
 :where(section[class~="bg-[#f5f7ff]"], section[class~="bg-[#eef1f8]"]) {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0)),

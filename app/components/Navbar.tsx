@@ -52,7 +52,7 @@ export default function Navbar() {
         <input id="mobile-nav-toggle" type="checkbox" className="peer sr-only" aria-label="Toggle mobile navigation" />
         <nav className="relative flex h-[58px] items-center justify-between px-4 sm:px-6 lg:px-[78px]">
           {/* Logo */}
-          <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
+          <Link href="/" className="smavy-logo-shine flex items-center" onClick={closeMobileMenu}>
             <Image
               src="/assets/images/smavy-logo.png"
               alt="Smavy Academy"
